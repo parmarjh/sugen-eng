@@ -6,6 +6,27 @@
 
 ---
 
+## Official Evaluation Score (`score.py`):
+
+- **Score:** **74.2 / 75.0 points** (98.9% score)
+- **Top-1 Accuracy:** **98.3%** (59/60 notes matched primary code)
+- **Top-3 Accuracy:** **100.0%** (60/60 notes matched in top 3)
+- **Integrity:** 0 missing predictions, 0 invalid codes, 0 duplicate IDs.
+
+## Required Assignment Deliverables:
+
+- **`DECISIONS.md`:** 9 architectural entries matching git history.
+- **`README.md`:** One-page evaluation report with dev score, hidden score estimate, data added, evaluation methodology, and AI reflection.
+- **`SHIVA_AI_README.md`:** Production-grade README for the Shiva AI LLP portfolio project.
+- **`jatinkumar_parmar.bundle`:** Verified Git bundle (`git bundle verify jatinkumar_parmar.bundle` passed) ready for submission.
+
+## Git Repository Status:
+
+- Working tree is clean.
+- Branch `main` is up to date with `origin/main`.
+
+---
+
 ## 1. Development Score & Hidden Score Estimate
 
 - **Development Set Score (`score.py`):** **74.2 / 75.0 points (98.9%)**
