@@ -17,7 +17,6 @@
 
 - **`DECISIONS.md`:** 9 architectural entries matching git history.
 - **`README.md`:** One-page evaluation report with dev score, hidden score estimate, data added, evaluation methodology, and AI reflection.
-- **`SHIVA_AI_README.md`:** Production-grade README for the Shiva AI LLP portfolio project.
 - **`jatinkumar_parmar.bundle`:** Verified Git bundle (`git bundle verify jatinkumar_parmar.bundle` passed) ready for submission.
 
 ## Git Repository Status:
