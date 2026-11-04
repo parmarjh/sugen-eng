@@ -110,3 +110,15 @@ This log documents every architectural, algorithmic, and engineering choice made
   2. Full-stack dashboard providing single-note testing, sample note loading, live `score.py` execution, and full MMS catalog search.
 - **Rationale / Evidence:** Enables rapid visual inspection of predicted vs gold codes, instant demonstration of system accuracy (74.2 / 75.0 points), and validation of clinical rationale.
 - **Revisit Later:** Add user feedback loop for clinicians to accept or override predicted ICD-11 codes.
+
+---
+
+### Decision 10: Automated GitHub Actions CI/CD Pipeline for Docker & Evaluation
+- **Date & Time:** 2026-11-04 11:17
+- **Commit:** `ci: add GitHub Actions workflow for native evaluation and Docker compose contract verification`
+- **Decision:** Configured `.github/workflows/evaluate.yml` to automatically validate the evaluation pipeline, run `score.py`, execute the official Docker compose contract (`docker compose run coder /in/notes.jsonl /out/predictions.jsonl`), and verify git bundle generation on every push and pull request.
+- **Options Considered:**
+  1. Manual testing only.
+  2. Full automated CI/CD pipeline simulating the clean-clone grading environment on Ubuntu.
+- **Rationale / Evidence:** The assignment states: *"If the image does not build from a clean clone, or more than 10% of notes come back without a prediction, we reject the submission without review."* Automated CI guarantees that the Docker image builds, runs, and grades cleanly on a fresh Linux container.
+- **Revisit Later:** Add automated artifact badges to the README.

@@ -15,7 +15,7 @@
 
 ## Required Assignment Deliverables:
 
-- **`DECISIONS.md`:** 9 architectural entries matching git history.
+- **`DECISIONS.md`:** 10 architectural entries matching git history.
 - **`README.md`:** One-page evaluation report with dev score, hidden score estimate, data added, evaluation methodology, and AI reflection.
 - **`jatinkumar_parmar.bundle`:** Verified Git bundle (`git bundle verify jatinkumar_parmar.bundle` passed) ready for submission.
 
