@@ -1,0 +1,12 @@
+services:
+  coder:
+    build: .
+    image: sugen-coder:latest
+    environment:
+      - OPENAI_API_KEY
+      - ANTHROPIC_API_KEY
+      - HTTPS_PROXY
+      - HTTP_PROXY
+    volumes:
+      - ./in:/in:ro
+      - ./out:/out
