@@ -13,3 +13,4 @@ This log documents key decisions made throughout the development of the ICD-11 c
   2. Flattening `public/` contents to the root directory.
 - **Rationale / Evidence:** The project specification explicitly stipulates that from a clean clone, `docker compose run coder /in/notes.jsonl /out/predictions.jsonl` must run directly, and the scorer expects paths like `data/dev_notes.jsonl` relative to the root. Flattening avoids fragile subfolder nesting and ensures reproducibility.
 - **Revisit Later:** None needed for repository layout.
+
