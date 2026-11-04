@@ -7,6 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   native-evaluation:
     name: Native Python Evaluation & Scorer
@@ -15,6 +18,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -40,17 +45,17 @@ jobs:
           python score.py --gold data/dev_notes.jsonl --pred out/predictions.jsonl --mms data/mms-2026-01.json --per-note out/per_note.jsonl | tee out/score_summary.txt
 
       - name: Validate Integrity & Score Threshold
+        shell: python
         run: |
-          python -c "
           import json
-          with open('out/predictions.jsonl') as f:
+          with open('out/predictions.jsonl', 'r', encoding='utf-8') as f:
               preds = [json.loads(line) for line in f if line.strip()]
-          assert len(preds) == 60, f'Expected 60 predictions, got {len(preds)}'
-          print(f'Integrity Check Passed: {len(preds)} valid predictions generated.')
-          "
+          assert len(preds) == 60, f"Expected 60 predictions, got {len(preds)}"
+          print(f"Integrity Check Passed: {len(preds)} valid predictions generated.")
 
       - name: Upload Prediction Artifacts
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: icd11-predictions-native
           path: |
@@ -65,6 +70,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -76,6 +83,7 @@ jobs:
       - name: Prepare In/Out Mount Directories
         run: |
           mkdir -p in out
+          chmod -R 777 in out
           cp data/dev_notes.jsonl in/notes.jsonl
 
       - name: Run Official Submission Contract Command
@@ -99,4 +107,3 @@ jobs:
           git bundle create test_submission.bundle --all
           git bundle verify test_submission.bundle
           echo "Git bundle successfully generated and verified."
-

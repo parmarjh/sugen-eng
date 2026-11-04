@@ -338,13 +338,16 @@ def predict_local(text, top_k=3):
 # Optional AI Reranker (OpenAI or Anthropic)
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_API_KEY")
+OPENAI_DISABLED = False
+ANTHROPIC_DISABLED = False
 
 def predict_note(text):
     """Predicts up to 3 ICD-11 codes. Uses LLM if key is configured, else local engine."""
+    global OPENAI_DISABLED, ANTHROPIC_DISABLED
     local_cands = predict_local(text, top_k=12)
     
-    # If no keys provided, return local prediction directly
-    if not OPENAI_KEY and not ANTHROPIC_KEY:
+    # If no keys provided or disabled due to quota limits, return local prediction directly
+    if (not OPENAI_KEY or OPENAI_DISABLED) and (not ANTHROPIC_KEY or ANTHROPIC_DISABLED):
         return local_cands[:3]
 
     # If key is available, call model to rerank the top candidates
@@ -361,10 +364,10 @@ Output JSON strictly in this format:
 {{"codes": ["CODE1", "CODE2", "CODE3"]}}
 """
 
-    if OPENAI_KEY:
+    if OPENAI_KEY and not OPENAI_DISABLED:
         try:
             import openai
-            client = openai.OpenAI(api_key=OPENAI_KEY)
+            client = openai.OpenAI(api_key=OPENAI_KEY, max_retries=0, timeout=10.0)
             resp = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
@@ -375,18 +378,19 @@ Output JSON strictly in this format:
             data = json.loads(resp.choices[0].message.content)
             codes = [c.strip().upper() for c in data.get("codes", []) if c.strip().upper() in valid_codes]
             if codes:
-                # Fill up to 3
                 for c in local_cands:
                     if c not in codes:
                         codes.append(c)
                 return codes[:3]
-        except Exception:
-            pass
+        except Exception as e:
+            err_msg = str(e).lower()
+            if "quota" in err_msg or "credit" in err_msg or "rate" in err_msg or "401" in err_msg or "429" in err_msg:
+                OPENAI_DISABLED = True
 
-    if ANTHROPIC_KEY:
+    if ANTHROPIC_KEY and not ANTHROPIC_DISABLED:
         try:
             import anthropic
-            client = anthropic.Anthropic(api_key=ANTHROPIC_KEY)
+            client = anthropic.Anthropic(api_key=ANTHROPIC_KEY, max_retries=0, timeout=10.0)
             msg = client.messages.create(
                 model="claude-3-haiku-20240307",
                 max_tokens=100,
@@ -401,8 +405,10 @@ Output JSON strictly in this format:
                         if c not in codes:
                             codes.append(c)
                     return codes[:3]
-        except Exception:
-            pass
+        except Exception as e:
+            err_msg = str(e).lower()
+            if "credit" in err_msg or "quota" in err_msg or "rate" in err_msg or "401" in err_msg or "429" in err_msg:
+                ANTHROPIC_DISABLED = True
 
     return local_cands[:3]
 
