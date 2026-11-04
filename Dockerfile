@@ -14,3 +14,4 @@ COPY coder.py .
 COPY score.py .
 
 ENTRYPOINT ["python", "coder.py"]
+
