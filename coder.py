@@ -14,6 +14,13 @@ import re
 import math
 from collections import Counter, defaultdict
 
+# Load environment variables from .env if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 # Path configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MMS_PATH = os.path.join(BASE_DIR, "data", "mms-2026-01.json")

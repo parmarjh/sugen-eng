@@ -13,6 +13,13 @@ import sys
 import json
 import subprocess
 from typing import List, Optional
+
+# Load environment variables from .env if present
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
