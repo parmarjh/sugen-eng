@@ -48,7 +48,7 @@ jobs:
         shell: python
         run: |
           import json
-          with open('out/predictions.jsonl', 'r', encoding='utf-8') as f:
+          with open("out/predictions.jsonl", "r", encoding="utf-8") as f:
               preds = [json.loads(line) for line in f if line.strip()]
           assert len(preds) == 60, f"Expected 60 predictions, got {len(preds)}"
           print(f"Integrity Check Passed: {len(preds)} valid predictions generated.")
@@ -91,7 +91,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          docker compose run coder /in/notes.jsonl /out/predictions.jsonl
+          docker compose run --rm coder /in/notes.jsonl /out/predictions.jsonl
 
       - name: Set up Python for Evaluation
         uses: actions/setup-python@v5
